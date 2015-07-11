@@ -1,0 +1,327 @@
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+<style>
+.branding-below {
+  bottom: 56px;
+  top: 0;
+}
+#FormPreview {
+border: 2px solid #cccccc;
+padding: 10px;
+padding-right: 100px; 
+
+}
+.sectionHeader {
+border-bottom: 2px solid #cccccc;
+padding-bottom: 2px;
+font-weight:bold;
+
+}
+.sectionFooter {
+border-top: 2px solid #cccccc;
+padding-top: 2px;
+
+}
+
+.empty {
+-webkit-box-shadow: inset 0px 0px 5px 2px #dd4b39;
+-moz-box-shadow: inset 0px 0px 5px 2px #dd4b39;
+box-shadow: inset 0px 0px 5px 2px #dd4b39;
+border: 1px solid #dd4b39;
+
+}
+.errorText {
+color: #dd4b39;
+}
+
+.pageOneTextInputs {
+display: block;
+}
+
+</style>
+
+<div class="sidebar branding-below">
+  <div class="block form-group">
+  Welcome to Attendance Sorter! First, you need to create a Google form for members/students to sign-in to.
+  
+    
+  </div>
+
+  <div class="block">
+  <h1 class="sectionHeader"> Form Options </h1>
+  <label>
+      <input onClick="UpdatePreview()" type="radio" name="SortNameOptionRadioGroup" value="1" id="SortNameOptionRadioGroup_0" class="radioButton" checked="true">
+      One question on the form: name </label>
+      <br>
+      <br>
+    
+    <label>
+      <input onClick="UpdatePreview()" type="radio" name="SortNameOptionRadioGroup" value="2" id="SortNameOptionRadioGroup_1" class="radioButton" >
+      Two questions on the form: first name, last name</label>
+      
+      <br>
+      <br>
+      
+      <label for="Title">Form Title (Title users will see at sign-in)</label>
+  <input id="formTitleInput" class="pageOneTextInputs" oninput="UpdatePreview()" onpaste="UpdatePreview()" onkeydown="UpdatePreview()" onkeyup="UpdatePreview()" type="text" style="width: 150px;">
+  
+  <br class="lineBreaks">
+  
+  
+  <label for="Name">File Name (File name you will see in "My Drive")</label>
+  <br>
+  <input id="formNameInput" type="text" style="width: 150px;">
+  
+  
+  </div>
+
+<div class="block">
+<h2 class="sectionHeader">How the form will look</h2>
+<div id ="FormPreview" class="inline form-group">
+<h1 id="formTitle" font-size= "23px" style='font-weight: bold;'>Form Title</h1>
+<label id="Namelabel" for="Name" style='font-weight: bold;'>Name</label>
+<input type="text" id="Name" style="width: 150px;" disabled>
+
+</div>
+</div>
+
+
+ <div id= "lastButton" class="block">
+    <button class="create" onclick="createForm()">CREATE FORM</button>
+  </div>
+  
+  <div class="block">
+  You can change the options for the form at any time in google sheets by choosing "Add-ons > Attendance Sorter > Form Options".
+  </div>
+  
+  
+  
+</div>
+
+<div class="sidebar bottom">
+<img alt="Add-on logo" class="logo" width="27" height="27" src="https://googledrive.com/host/0B0G1UdyJGrY6XzdjQWF4a1JYY1k/translate-logo-small.png">
+  <span class="gray">
+   Attendance Sorter by Tovly Deutsch</span>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script>
+var mistakeMade = false;
+var firstMistakeMade = false;
+var secondMistakeMade = false;
+$( "input" ).click(function() {
+  $( this ).removeClass('empty');
+});
+
+$("#formTitleInput").blur(function() {
+
+if (firstMistakeMade == true && this.value == '') {
+
+  $( this ).addClass('empty');
+  if (document.getElementById("firstError") == null) {
+$('#formTitleInput').after('<p class="errorText" id="firstError"> You must give the form a title</p>');
+
+}
+  }
+  else if (firstMistakeMade == true && this.value != '') {
+  $( this ).removeClass('empty');
+  $('#firstError').remove();
+  }
+  
+  
+});
+
+$("#formNameInput").blur(function() {
+
+if (secondMistakeMade == true && this.value == '') {
+
+  $( this ).addClass('empty');
+  if (document.getElementById("secondError") == null) {
+$('#formNameInput').after('<p class="errorText" id="secondError"> You must give the form a name</p>');
+
+}
+  
+  }
+  else if (secondMistakeMade == true && this.value != '') {
+  $( this ).removeClass('empty');
+  $('#secondError').remove();
+  
+  }
+  
+  
+});
+
+function UpdatePreview() {
+//This should live update the title but the second part isn't working
+
+document.getElementById("formTitle").innerHTML = document.getElementById('formTitleInput').value;
+
+if (document.getElementById("SortNameOptionRadioGroup_0").checked) {
+google.script.run.debug("first if ran");
+if (document.getElementById('Name') === null) {
+google.script.run.debug("second if ran");
+
+$('#firstNamelabel').remove();
+$('#firstName').remove();
+$('#lastNamelabel').remove();
+$('#lastName').remove();
+$('#FormPreview').append("<label id='Namelabel' for='Name' style='font-weight: bold;'>Name</label> <input type='text' id='Name' style='width: 150px;' disabled>");
+
+
+}
+
+
+}
+
+else {
+if (document.getElementById('Name') !== null) {
+google.script.run.debug("third if ran");
+
+$('#Name').remove();
+$('#Namelabel').remove();
+$('#FormPreview').append("<label id='firstNamelabel' for='firstName' style='font-weight: bold;'>First name</label> <input type='text' id='firstName' style='width: 150px;' disabled> <label id='lastNamelabel' for='lastName' style='font-weight: bold; color:black;'>Last name</label> <input type='text' id='lastName' style='width: 150px;' disabled> ");
+
+
+
+};
+};
+
+}
+ function onFailure(error) {
+ $('.loader').remove();
+ google.script.run.gsFormCreateFail(error);
+ }
+  function onSuccess() {
+  $('.loader').remove();
+  google.script.run.gsFormCreateSuccess();
+  }
+function createForm() {
+
+if (document.getElementById('formTitleInput').value == '' ){
+$("#formTitleInput").addClass('empty');
+if (mistakeMade == false) {
+$('.lineBreaks').remove();
+$('#formTitleInput').after('<p class="errorText" id="firstError"> You must give the form a title</p>');
+}
+}
+else if (document.getElementById("firstError") != null) {
+$('#firstError').remove();
+
+}
+if (document.getElementById('formNameInput').value == '' ){
+$("#formNameInput").addClass('empty');
+if (secondMistakeMade == false) {
+$('#formNameInput').after('<p class="errorText" id="secondError"> You must give the form a name</p>');
+
+}
+}
+else if (document.getElementById("secondError") != null) {
+$('#secondError').remove();
+
+}
+
+if (document.getElementById('formTitleInput').value == '') {
+mistakeMade = true;
+firstMistakeMade = true;
+
+}
+else {
+mistakeMade = false;
+firstMistakeMade = false;
+}
+if (document.getElementById('formNameInput').value == '') {
+mistakeMade = true;
+secondMistakeMade = true;
+
+}
+else {
+
+secondMistakeMade = false;
+}
+if (mistakeMade == true) {
+
+return;
+}
+$('#lastButton').after('<span class="loader"><span class="loader-inner"></span></span>');
+if (document.getElementById('SortNameOptionRadioGroup_0').checked) {
+
+var numOfQuestions = 1
+}
+else{
+var numOfQuestions = 2
+};
+var formTitle = document.getElementById('formTitleInput').value; 
+var formName = document.getElementById('formNameInput').value;
+
+
+google.script.run.withSuccessHandler(onSuccess).withFailureHandler(onFailure).createForm(numOfQuestions,formTitle,formName);
+
+}
+</script>
+<style>
+.loader {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  position: relative;
+  border: 4px solid #d14836;
+  top: 50%;
+  animation: loader 2s infinite ease;
+    margin: 30px auto;
+  left: 90px;
+}
+
+.loader-inner {
+  vertical-align: top;
+  display: inline-block;
+  width: 100%;
+  background-color: #d14836;
+  animation: loader-inner 2s infinite ease-in;
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  
+  25% {
+    transform: rotate(180deg);
+  }
+  
+  50% {
+    transform: rotate(180deg);
+  }
+  
+  75% {
+    transform: rotate(360deg);
+  }
+  
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loader-inner {
+  0% {
+    height: 0%;
+  }
+  
+  25% {
+    height: 0%;
+  }
+  
+  50% {
+    height: 100%;
+  }
+  
+  75% {
+    height: 100%;
+  }
+  
+  100% {
+    height: 0%;
+  }
+}
+</style>

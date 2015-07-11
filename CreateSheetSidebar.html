@@ -1,0 +1,237 @@
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+<style>
+.branding-below {
+  bottom: 56px;
+  top: 0;
+}
+#FormPreview {
+border: 2px solid #cccccc;
+padding: 10px;
+padding-right: 100px; 
+
+}
+.sectionHeader {
+border-bottom: 2px solid #cccccc;
+padding-bottom: 2px;
+font-weight:bold;
+
+}
+.sectionFooter {
+border-top: 2px solid #cccccc;
+padding-top: 2px;
+
+}
+
+.empty {
+-webkit-box-shadow: inset 0px 0px 5px 2px #dd4b39;
+-moz-box-shadow: inset 0px 0px 5px 2px #dd4b39;
+box-shadow: inset 0px 0px 5px 2px #dd4b39;
+border: 1px solid #dd4b39;
+
+}
+.errorText {
+color: #dd4b39;
+}
+
+.pageOneTextInputs {
+display: block;
+}
+.arrow {
+font-size: 45px;
+  vertical-align: sub;
+}
+
+</style>
+
+<div class="sidebar branding-below">
+  <div class="block form-group">
+  Success! You've successfully created a form for your members to sign-in to. You can view the form in "My Drive".<br><br> Next, you'll have to create a formatted sheet for the attendance data.
+    
+  </div>
+
+  <div class="block">
+  <h1 class="sectionHeader"> Sheet Format </h1>
+  <label>
+      <input onClick="UpdatePreview()" type="radio" name="SortNameOptionRadioGroup" value="1" id="SortTypeRadioGroup_0" class="radioButton" checked="true">
+      Simple data: Name and number of meetings attended </label>
+      <br>
+      <br>
+    
+    <label>
+      <input onClick="UpdatePreview()" type="radio" name="SortNameOptionRadioGroup" value="2" id="SortTypeRadioGroup_1" class="radioButton" >
+      Dataful display: Per date attendance</label>
+      
+      <br>
+      <br>
+      
+      <!--<label for="Title">Sheet Name</label>-->
+  <!--<input id="formTitleInput" class="pageOneTextInputs" oninput="UpdatePreview()" onpaste="UpdatePreview()" onkeydown="UpdatePreview()" onkeyup="UpdatePreview()" type="text" style="width: 150px;"> -->
+  
+  <br class="lineBreaks">
+  
+  
+  
+  <br>
+  
+  
+  
+  </div>
+
+<div class="block">
+<h2 class="sectionHeader" id="sheetPreview"><span class="arrow">&#8592;</span> Sheet Preview</h2>
+
+</div>
+
+
+ <div id= "lastButton" class="block">
+    <button class="create" onClick="createSheet()">CREATE SHEET</button>
+  </div>
+ 
+  
+  
+  
+</div>
+
+<div class="sidebar bottom">
+<img alt="Add-on logo" class="logo" width="27" height="27" src="https://googledrive.com/host/0B0G1UdyJGrY6XzdjQWF4a1JYY1k/translate-logo-small.png">
+  <span class="gray">
+   Attendance Sorter by Tovly Deutsch</span>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script>  
+
+var sheetType = 'simple';
+$( "input[type='radio']" ).change(function() {
+
+if (document.getElementById("SortTypeRadioGroup_0").checked) {
+sheetType = 'simple';
+}
+else {
+sheetType = 'dataful';
+}
+$('#sheetPreview').after('<span class="loader"><span class="loader-inner"><span class="innerText">Updating Preview</span></span></span>');
+google.script.run.withSuccessHandler(onSuccess).withFailureHandler(onFailure).updateSheetPreview(sheetType);
+
+});
+ function onFailure(error) {
+ $('.loader').remove();
+ if($('#myElement').length == 0) {
+ $('#sheetPreview').after('<p class="failText">(Preview failed to update)</p>');
+ }
+ }
+  function onSuccess() {
+  $('.loader').remove();
+  $('.failText').remove();
+  }
+  
+   function onSheetFailure(error) {
+ $('.loader').remove();
+ google.script.run.gsSheetCreateFail(error);
+ }
+  function onSheetSuccess() {
+  google.script.run.withSuccessHandler(google.script.host.close).gsSheetCreateSuccess();
+  
+  }
+function createSheet () {
+$('#sheetPreview').after('<span class="loader"><span class="loader-inner"><span class="innerText">Creating Sheet</span></span></span>');
+google.script.run.withSuccessHandler(onSheetSuccess).withFailureHandler(onSheetFailure).createSheet(sheetType);
+
+}
+</script>
+<style>
+.loader {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  position: relative;
+  border: 4px solid #d14836;
+  top: 50%;
+  animation: loader 2s infinite ease;
+    margin: 30px auto;
+  left: 90px;
+}
+
+.loader-inner {
+  vertical-align: top;
+  display: inline-block;
+  width: 100%;
+  background-color: #d14836;
+  animation: loader-inner 2s infinite ease-in;
+  text-align: center;
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  
+  25% {
+    transform: rotate(180deg);
+  }
+  
+  50% {
+    transform: rotate(180deg);
+  }
+  
+  75% {
+    transform: rotate(360deg);
+  }
+  
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loader-inner {
+  0% {
+    height: 0%;
+  }
+  
+  25% {
+    height: 0%;
+  }
+  
+  50% {
+    height: 100%;
+  }
+  
+  75% {
+    height: 100%;
+  }
+  
+  100% {
+    height: 0%;
+  }
+}
+.innerText {
+  
+  animation: innerText 2s infinite ease;
+    font-weight: 700;
+}
+
+@keyframes innerText {
+  0% {
+    transform: rotate(0deg);
+  }
+  
+  25% {
+    transform: rotate(180deg);
+  }
+  
+  50% {
+    transform: rotate(180deg);
+  }
+  
+  75% {
+    transform: rotate(360deg);
+  }
+  
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style>
