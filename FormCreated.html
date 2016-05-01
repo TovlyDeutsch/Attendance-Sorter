@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+<style>
+
+</style>
+
+  <? var formUrl = SpreadsheetApp.getActiveSpreadsheet().getFormUrl();?>
+
+  <div class="block">
+ <p>Success! You've successfully created a form called 
+<a class="formLink" target="_blank" href="<?!=formUrl?>">"<?!=FormApp.openByUrl(formUrl).getTitle()?>"</a> 
+to collect attendance for this spreadsheet. This form's responses will automatically be recorded in all the "Sorted Attendance" sheets in this spreadsheet
+<br><br>
+Additionally, you can submit attendance through Attendance Sorter by clicking "Add-ons > Attendance Sorter > Mark attendance".
+</p>
+  </div>
+   <div id= "lastButton" class="block">
+    <button onClick="google.script.host.close()">Close</button>
+  </div>
+
+<script>  
+
+</script>

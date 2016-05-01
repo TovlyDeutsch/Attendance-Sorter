@@ -1,0 +1,561 @@
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+
+<style>
+.branding-below {
+  bottom: 56px;
+  top: 0;
+}
+#FormPreview {
+border: 2px solid #cccccc;
+padding: 10px;
+padding-right: 100px; 
+
+}
+.sectionHeader {
+border-bottom: 2px solid #cccccc;
+padding-bottom: 2px;
+font-weight:bold;
+transition: all 0.2s linear;
+}
+
+.noUnderline {
+border-bottom: 0px solid #cccccc;
+}
+
+.sectionFooter {
+border-top: 2px solid #cccccc;
+padding-top: 2px;
+
+}
+
+.empty {
+box-shadow: inset 0px 0px 5px 2px #dd4b39;
+border: 1px solid #dd4b39;
+
+}
+.errorText {
+color: #dd4b39;
+}
+
+.aboveButtons {
+
+}
+
+.pageOneTextInputs {
+display: block;
+}
+
+.refreshButton {
+width: 25px;
+  min-width: 0;
+  height: 25px;
+  line-height: 0;
+  padding: 0;
+  display: inline;
+  margin: 0 20px;
+  margin-right: 30px;
+  float: right;
+  margin-top: 10px;
+}
+
+.sheetsTitle {
+  display: inline-block;
+  margin-bottom: 0;
+  width: 230px;
+}
+
+.sheetCheckWrapper {
+padding: 5px;
+cursor: default;
+}
+
+.SelectAllCheckWrapper {
+padding: 5px;
+cursor: default;
+font-weight: bold;
+margin-top: 6px;
+}
+
+.sheetCheckWrapper:not(.selected) {
+background-color: #EB4A4A;
+color: #fff;
+}
+
+.checkList {
+  margin-top: 105px;
+  padding-left: 12px;
+  padding-right: 12px;
+  position: fixed;
+  overflow-y: auto;
+  width: 275px;
+  display: block;
+}
+
+button {
+padding: 0;
+}
+
+#placeHolderButton {
+visibility: hidden;
+}
+
+.hiddenText {
+margin-left: 5px;
+color: gray;
+}
+
+.topMenu {
+position: fixed;
+background-color: rgb(255, 255, 255);
+width: 276px;
+z-index: 10;
+padding-top: 12px;
+transition: all 0.2s linear;
+padding-left: 12px;
+padding-right: 12px;
+}
+
+.wholeSidebar {
+padding: 0;
+}
+#lastButtonBlock {
+padding-left: 12px;
+padding-right: 12px;
+position: fixed;
+bottom: 50px;
+background-color: #fff;
+width: 300px;
+transition: all 0.2s linear;
+margin: 0;
+padding-top: 12px;
+}
+.topMenu.active {
+  box-shadow: 1px 0px 5px #5C5C5C;   
+}
+
+
+.selected span {
+color: #C0C0C0;
+}
+
+.coveringButtonGroup {
+  box-shadow: -9px -5px 5px -5px #5C5C5C;
+  padding-top: 12px;
+}
+
+#instructionText {
+font-size: 14px;
+    color: #7A7A7A;
+    font-weight: bold;
+}
+
+#to {
+    display: inline;
+    font-size: 24px;
+    margin: 0 10px;
+    vertical-align: middle;
+    }
+</style>
+
+
+
+
+<div class="sidebar branding-below wholeSidebar" id="mainSidebar">
+
+  <div class="topMenu block" id="fixedTopMenu">
+    <h1 class="sectionHeader sheetsTitle">Attendance<span id="instructionText"><br> (uncheck to mark absent)</span></h1> 
+    
+    <div id="selectAll" class="SelectAllCheckWrapper" onclick="groupSelector()"><input onclick="groupSelector()" class="SelectAllCheckbox" id="selectAllHeader" type="checkbox" name="SelectAll">
+      <span id="selectAllText">Select All</span>
+    </div> 
+  </div> <!-- end topMenu Block -->
+  
+  <div class="checkList" id="checkList">
+  </div>
+
+  <div id="lastButtonBlock" class="block">
+    <button class="create actionButton" id="submit">SUBMIT</button>
+    <p id="to">to</p>
+    <select id="sheetsDropDown">
+    <option data-sheetId="all">All sheets</option>
+    <option value='loading' class="loadingSheetsOption">Loading sheets...</option>
+ <!-- here will be added programatically all the sheets in the document properties "Sheets" -->
+ </select>
+  </div> <!-- end lastButtonBlock -->
+  
+</div> <!-- end sidebar branding-below -->
+
+<div class="sidebar bottom">
+<img alt="Add-on logo" class="logo" width="27" height="27" src="https://i.imgur.com/NV301lN.png?1">
+  <span class="gray">
+   Attendance Sorter by Tovly Deutsch</span>
+</div>
+
+
+
+<script>  
+// 8-27 need to add drop down at top to indicate which sheets to submit attendance to. Can be all sheets or a sheet in the list. 
+//It should select active sheet in dropdown if that sheet is in the document properties store 
+$('#sheetsDropDown').change( function () {
+  if ($('.loadingSheetsOption').prop('selected') === true) { $('#submit').prop('disabled', true) } 
+  else { $('#submit').prop('disabled', false) }
+});
+function onGetSheetsSuccess(sheets) {
+$('.loadingSheetsOption').remove();
+$('.loadingSheetsOption').off('change');
+$('#submit').prop('disabled', false)
+  for (var i = 0; i < sheets.length; i++) {
+    $("#sheetsDropDown").append('<option ' + 'data-active="' + sheets[i].isActiveSheet.toString() + '" data-sheetId="' + sheets[i].sheetId + '">' + sheets[i].sheetName + '</option>') 
+  }
+  if( $("#sheetsDropDown").find("[data-active='true']").length > 0) {
+    $("#sheetsDropDown").find("[data-active='true']").prop('selected', true);
+  }
+  else{
+    $("option").filter(":last").prop('selected', true);
+  }
+}
+
+function onGetSheetsFailure(error) {
+insertErrorText('Sheets could not be retrieved. Please close and reopen this sidebar. If this issue persists, please report it via "Attendance Sorter > Help".');
+}
+google.script.run.withSuccessHandler(onGetSheetsSuccess).withFailureHandler(onGetSheetsFailure).getExistingSheets();
+var selectType = true;
+var shift = false;
+var thisNum;
+var lastNum;
+var lowerNum;
+var higherNum;
+var checkboxBeyondButtons;
+var scrollListAtEnd = false;
+$( document ).keydown(function(event) {
+  if (event.which == 16) {
+    shift = true;
+  }  
+});
+
+$( document ).keyup(function(event) {
+  if (event.which == 16) {
+    shift = false;
+  }  
+});
+
+$('#checkList').scroll(function() {     
+    var scroll = $('.checkList').scrollTop();
+    if (scroll > 0) {
+        $(".topMenu").addClass("active");
+    }
+    else {
+        $(".topMenu").removeClass("active");
+    }
+    
+   var buttonGroupTop = document.getElementById('lastButtonBlock').getBoundingClientRect().top;
+   if ($( ".sheetCheckWrapper:last" )[0].getBoundingClientRect().bottom <= buttonGroupTop) {
+     $('#lastButtonBlock').removeClass('coveringButtonGroup');
+     checkboxBeyondButtons = false;
+     if ((buttonGroupTop - $( ".sheetCheckWrapper:last" )[0].getBoundingClientRect().bottom) < 2) {
+       scrollListAtEnd = true;
+     }
+   }
+   else {
+     $('#lastButtonBlock').addClass('coveringButtonGroup');
+     checkboxBeyondButtons = true;
+   }
+  
+});
+
+function recalcCheckListHeight() {
+
+  var buttonGroupTop = document.getElementById('lastButtonBlock').getBoundingClientRect().top;
+//  console.log('last checkbox' + $( ".sheetCheckWrapper:last" )[0].getBoundingClientRect().bottom);
+//  console.log('buttongrouptop' + buttonGroupTop);
+  if (($( ".sheetCheckWrapper:last" )[0].getBoundingClientRect().bottom + 1.5) >= buttonGroupTop) {
+    $('#lastButtonBlock').addClass('coveringButtonGroup');
+    checkboxBeyondButtons = true;
+    $('.checkList').css('height', 3 + buttonGroupTop - document.getElementById('fixedTopMenu').getBoundingClientRect().bottom);
+    
+  }
+  else {
+    $('#lastButtonBlock').removeClass('coveringButtonGroup');
+    checkboxBeyondButtons = false;
+    $('.checkList').css('height', 'auto');
+  }
+}
+
+function groupSelector() {
+
+  $( ".sheetCheckbox" ).each(function(){
+    $(this).prop('checked', selectType);
+  });
+  $( ".sheetCheckbox" ).parent().addClass('selected');
+  $(".sheetCheckbox:not(:checked)").parent().removeClass('selected');
+  selectType = !selectType;
+  if (selectType == false) {
+    document.getElementById('selectAllText').innerHTML = 'Deselect All';
+  }
+  else {
+    document.getElementById('selectAllText').innerHTML = 'Select All';
+  }
+}
+
+function onGetNamesFailure(error) {
+ $('.loader').remove();
+ $('#submit').prop('disabled', true)
+ insertErrorText('Names could not be retrieved. Please close this sidebar and try again. If this issue persists, please report it via "Attendance Sorter > Help".');
+}
+ 
+$( ".SelectAllCheckWrapper" ).click(function() {
+  if ($('.errorText').length) {
+    $('.errorText').remove();
+    recalcCheckListHeight();
+  }
+  var checkBox = $(this).find(">:first-child");
+  checkBox.prop('checked', !checkBox.prop('checked'));
+  $( ".sheetCheckbox:checked" ).parent().addClass('selected');
+  $(".sheetCheckbox:not(:checked)").parent().removeClass('selected');
+});
+ 
+$( ".SelectAllCheckbox" ).click(function( event ) {
+  event.stopPropagation();
+  if ($('.errorText').length) {
+    $('.errorText').remove();
+    recalcCheckListHeight();
+  }
+  $( ".sheetCheckbox:checked" ).parent().addClass('selected');
+  $(".sheetCheckbox:not(:checked)").parent().removeClass('selected');   
+});
+
+function addSelected($elementToAddClassTo) {
+  $( ".sheetCheckbox:checked" ).parent().addClass('selected');
+  $(".sheetCheckbox:not(:checked)").parent().removeClass('selected');
+  $(".lastClicked").removeClass('lastClicked');
+  $elementToAddClassTo.addClass('lastClicked');
+}
+ 
+function onGetNamesSuccess(names) {
+
+  //$('.SelectAllCheckbox').prop('checked', false);
+  selectType = true;
+  //document.getElementById('selectAllText').innerHTML = 'Select All';
+  //$( ".sheetCheckWrapper" ).remove();
+ // console.log(names);
+  var placerObject = {firstName: '', lastName: ''};
+  if (typeof names != 'undefined') {
+    for (var i = 0; i < names.length; i++) {
+    placerObject.lastName = names[i].lastName.replace(/\s+/g, '&nbsp;');
+    placerObject.firstName = names[i].firstName.replace(/\s+/g, '&nbsp;');
+      $('.checkList').append('<div id="' + i + '" class="sheetCheckWrapper selected"><input class="sheetCheckbox" type="checkbox" checked="true" data-nameObject=' + JSON.stringify(placerObject) + '>' + names[i].firstName + ' ' + names[i].lastName + '</div>');    
+    }
+  }
+  else {
+  $('button').attr("disabled", true);
+  $('.checkList').append('<p class="errorText">No Names detected in this sheet. <button onclick="google.script.run.openInsertRosterSidebar()">Add Names</button></p>');
+  }
+  $( ".sheetCheckbox" ).click(function( event ) {
+    event.stopPropagation();
+    $('.errorText').remove();
+    recalcCheckListHeight();
+    if (shift == true) {
+      thisNum = +$(this).parent().prop('id');
+      lastNum = +$('.lastClicked').prop('id');
+      lowerNum = Math.min(thisNum, lastNum) + 1;
+      higherNum = Math.max(thisNum, lastNum);
+        for (var i = lowerNum; i < higherNum; i++) {
+          var checkBox = $('#' + i.toString()).find(">:first-child");
+          checkBox.prop('checked', !checkBox.prop('checked'));
+        }    
+    }
+    addSelected($(this).parent()); 
+    
+  });
+  
+  $( ".sheetCheckWrapper" ).click(function() {
+    $('.errorText').remove();
+    recalcCheckListHeight()
+    if (shift == true) {
+      thisNum = +$(this).prop('id');
+      lastNum = +$('.lastClicked').prop('id');
+      lowerNum = Math.min(thisNum, lastNum) + 1;
+      higherNum = Math.max(thisNum, lastNum);
+      for (var i = lowerNum; i < higherNum; i++) {
+        var checkBox = $('#' + i.toString()).find(">:first-child");
+        checkBox.prop('checked', !checkBox.prop('checked'));
+      }   
+    }  
+    var checkBox = $(this).find(">:first-child");
+    checkBox.prop('checked', !checkBox.prop('checked'));
+    addSelected($(this));  
+   
+  });
+  
+  $('.loader').remove();
+  $('button').attr("disabled", false);
+ recalcCheckListHeight();
+
+} // end onGetSheetsSuccess
+
+function refresh() {
+  $('.errorText').remove();
+  $( ".sheetCheckWrapper" ).remove();
+  $('.checkList').append('<span class="blue loader"><span class="blueInner loader-inner"></span></span>');
+  google.script.run.withSuccessHandler(onGetNamesSuccess).withFailureHandler(onGetNamesFailure).gsGetNames();
+}
+
+refresh();
+
+$( window ).resize(function() {
+  recalcCheckListHeight();
+});
+
+function insertErrorText (error) {
+  if (checkboxBeyondButtons == false) {
+    $('.checkList').append('<p class="errorText" id="selectError">' + error + '</p>');
+  }
+  else {
+      $('#lastButtonBlock').prepend('<p class="aboveButtons errorText" id="firstError">' + error + '</p>');
+      recalcCheckListHeight();
+  }
+}
+
+function onSubmitSuccess() {
+google.script.host.close();
+}
+
+function onSubmitFailure(error) {
+  $('.loader').remove();
+  $('button').attr("disabled", false);
+  if (checkboxBeyondButtons == false && scrollListAtEnd === false) {
+    $('.checkList').append('<p class="errorText" id="firstError">Attendance could not be submitted. Please try again. If this issue persists, please report it via "Attendance Sorter > Help".</p>');
+  }
+  else {
+      $('#lastButtonBlock').prepend('<p class="errorText" id="firstError">Attendance could not be submitted. Please try again. If this issue persists, please report it via "Attendance Sorter > Help".</p>');
+      recalcCheckListHeight();
+  }
+}
+
+
+$( "#submit" ).click(function() {
+  $('button').attr("disabled", true);
+  $('.errorText').remove();
+  recalcCheckListHeight();
+  var selected = [];
+  $('.checkList input:checked').each(function() {
+    selected.push($(this).data('nameobject'));
+  });
+
+  $('#lastButtonBlock').after('<span class="loader"><span class="loader-inner"></span></span>');
+  google.script.run.withSuccessHandler(onSubmitSuccess).withFailureHandler(onSubmitFailure).gsMarkAttendance(selected, $( "#sheetsDropDown option:selected" ).data('sheetid'));
+});
+
+</script>
+<style>
+.loader {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  position: fixed;
+  border: 4px solid #d14836;
+  bottom: 5%;
+  animation: loader 2s infinite ease;
+  margin: 30px auto;
+  left: 90px;
+}
+
+.blue {
+  border: 4px solid #4889f1 !important;
+  position: relative !important;
+}
+
+.blueInner {
+  background-color: #4889f1 !important;
+}
+
+.blueBottom {
+  border: 4px solid #4889f1 !important;
+}
+.blueBottomInner {
+  background-color: #4889f1 !important;
+}
+
+.loader-inner {
+  vertical-align: top;
+  display: inline-block;
+  width: 100%;
+  background-color: #d14836;
+  animation: loader-inner 2s infinite ease-in;
+  text-align: center;
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  
+  25% {
+    transform: rotate(180deg);
+  }
+  
+  50% {
+    transform: rotate(180deg);
+  }
+  
+  75% {
+    transform: rotate(360deg);
+  }
+  
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loader-inner {
+  0% {
+    height: 0%;
+  }
+  
+  25% {
+    height: 0%;
+  }
+  
+  50% {
+    height: 100%;
+  }
+  
+  75% {
+    height: 100%;
+  }
+  
+  100% {
+    height: 0%;
+  }
+}
+.innerText {
+  
+  animation: innerText 2s infinite ease;
+    font-weight: 700;
+    text-align: center;
+}
+
+@keyframes innerText {
+  0% {
+    transform: rotate(0deg);
+  }
+  
+  25% {
+    transform: rotate(180deg);
+  }
+  
+  50% {
+    transform: rotate(180deg);
+  }
+  
+  75% {
+    transform: rotate(360deg);
+  }
+  
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style>

@@ -33,6 +33,7 @@ border: 1px solid #dd4b39;
 }
 .errorText {
 color: #dd4b39;
+margin-bottom: 0;
 }
 
 .pageOneTextInputs {
@@ -42,22 +43,20 @@ display: block;
 font-size: 45px;
   vertical-align: sub;
 }
-
-.logo {
-  vertical-align: -30%;
+#lastButton{
+position:absolute; 
+bottom:0;
 }
+
 
 </style>
 
-<div class="sidebar branding-below">
-  <div class="block form-group">
-    Create a sheet to store your sorted Attendance.
-  </div>
+  
 
   <div class="block">
   <h1 class="sectionHeader">Sheet Options</h1>
   <p> This setting will determine how many recent meetings (the columns headed by dates) should be shown. All older meetings will be hidden.</p>
-    <p>Number of meetings to show</p>
+    <p><b>Number of meetings to show</b></p>
     <select id='numOfMeetingsToShow' style="display:inline">
       <option value="all">All</option>
       <option value="5">5</option>
@@ -67,51 +66,25 @@ font-size: 45px;
       <option value="none">None</option>
     </select>
     <input id="customInput" style="display:none; margin-left: 15px;" type="number"> 
-      <br>
-      <br>
-    
-    
 
-  
   <br class="lineBreaks">
-  
-  
-  
   <br>
-  
-  
-  
-  </div>
-
-<div class="block">
-<h2 class="sectionHeader" id="sheetPreview"><span class="arrow">&#8592;</span> Sheet Preview</h2>
-
-</div>
-
 
  <div id= "lastButton" class="block">
-    <button class="create" onClick="createSheet()">CREATE SHEET</button>
+    <button class="action" onClick="saveSettings()">Save</button>
+    <button onClick="google.script.host.close()">Close</button>
   </div>
  
   
   
   
-</div>
-
-<div class="sidebar bottom">
-<img alt="Add-on logo" class="logo" width="27" height="27" src="https://i.imgur.com/NV301lN.png?1">
-  <span class="gray">
-   Attendance Sorter by Tovly Deutsch</span>
-</div>
 
 
 
-<script>
-function insertFormLink(formUrl) {
-$(".formLink").attr('href', formUrl);
-}
-google.script.run.withSuccessHandler(insertFormLink).getFormEditUrl();
 
+
+
+<script>  
 
 $( "#numOfMeetingsToShow, #customInput" ).change(function() {
   if (document.getElementById("numOfMeetingsToShow").value == 'custom') {
@@ -122,57 +95,37 @@ $( "#numOfMeetingsToShow, #customInput" ).change(function() {
   }
 });
 
-google.script.run.withSuccessHandler(onSuccess).withFailureHandler(onFailure).updateSheetPreview('never');
-$( "select, #customInput" ).change(function() {
 
-$('#sheetPreview').after('<span class="loader"><span class="loader-inner"><span class="innerText">Updating Preview</span></span></span>');
-if (document.getElementById("numOfMeetingsToShow").value == 'custom') {
-google.script.run.withSuccessHandler(onSuccess).withFailureHandler(onFailure).updateSheetPreview(document.getElementById("customInput").value);
-}
-else {
-google.script.run.withSuccessHandler(onSuccess).withFailureHandler(onFailure).updateSheetPreview(document.getElementById("numOfMeetingsToShow").value);
-}
-
-});
-
-
-
- function onFailure(error) {
- $('.loader').remove();
- if($('.failText').length == 0) {
-   $('#sheetPreview').after('<p class="failText">(Preview failed to update)</p>');
- }
- }
-  function onSuccess() {
+ 
+  function onSettingsSuccess() {
   $('.loader').remove();
-  $('.failText').remove();
+  google.script.host.close();
   }
   
-   function onSheetFailure(error) {
+   function onSettingsFailure(error) {
  $('.loader').remove();
- google.script.run.gsSheetCreateFail(error);
+if($('.failText').length == 0) {
+   $('#lastButton').append('<p class="errorText">Settings could not be saved. Please try again.</p>');
  }
-  function onSheetSuccess() {
-  google.script.run.withSuccessHandler(google.script.host.close).gsSheetCreateSuccess();
+ }
   
-  }
-function createSheet () {
-$('#sheetPreview').after('<span class="loader"><span class="loader-inner"><span class="innerText">Creating Sheet</span></span></span>');
+function saveSettings () {
+$('#lastButton').prepend('<span class="loader"><span class="loader-inner"><span class="innerText"></span></span></span>');
 if (document.getElementById("numOfMeetingsToShow").value == 'custom') {
-google.script.run.withSuccessHandler(onSheetSuccess).withFailureHandler(onSheetFailure).createSheet(document.getElementById("customInput").value);
+google.script.run.withSuccessHandler(onSettingsSuccess).withFailureHandler(onSettingsFailure).gsUpdateSettings(document.getElementById("customInput").value);
 }
 else {
-google.script.run.withSuccessHandler(onSheetSuccess).withFailureHandler(onSheetFailure).createSheet(document.getElementById("numOfMeetingsToShow").value);
+google.script.run.withSuccessHandler(onSettingsSuccess).withFailureHandler(onSettingsFailure).gsUpdateSettings(document.getElementById("numOfMeetingsToShow").value);
 }
 }
 </script>
 <style>
 .loader {
-  display: inline-block;
+  display: block;
   width: 60px;
   height: 60px;
   position: relative;
-  border: 4px solid #d14836;
+  border: 4px solid #4889f1;
   top: 50%;
   animation: loader 2s infinite ease;
     margin: 30px auto;
@@ -183,7 +136,7 @@ google.script.run.withSuccessHandler(onSheetSuccess).withFailureHandler(onSheetF
   vertical-align: top;
   display: inline-block;
   width: 100%;
-  background-color: #d14836;
+  background-color: #4889f1;
   animation: loader-inner 2s infinite ease-in;
   text-align: center;
 }
