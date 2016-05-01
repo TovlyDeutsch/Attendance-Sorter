@@ -5,10 +5,10 @@ Attendance Sorter is a Google Sheets add-on to help people manage attendance wit
 #### Example Sheet
 
 | First Name    | Last Name     |1/18/16|1/25/16|2/1/16|2/8/16|
-| ------------- |:-------------:| -----:|---|---|---|
-| col 3 is      | right-aligned | $1600 |absent|attended|attended|
-| col 2 is      | centered      |   $12 |absent|attended|absent|
-| zebra stripes | are neat      |    $1 |absent|absent|attended|
+| :------------- |:-------------| -----|---|---|---|
+| John | Doe ||absent|attended|attended|
+| Zack | Green |absent|attended|absent|
+| Liza | Purple |absent|absent|attended|
 
 ## Usage
 
