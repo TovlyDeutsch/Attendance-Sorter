@@ -6,9 +6,9 @@ Attendance Sorter is a Google Sheets add-on to help people manage attendance wit
 
 | First Name    | Last Name     |1/18/16|1/25/16|2/1/16|2/8/16|
 | :------------- |:-------------| -----|---|---|---|
-| John | Doe ||absent|attended|attended|
-| Zack | Green |absent|attended|absent|
-| Liza | Purple |absent|absent|attended|
+| John | Doe |absent|attended|attended|attended|
+| Zack | Green |absent|attended|absent|attended|
+| Liza | Purple |absent|absent|attended|absent|
 
 ## Usage
 
