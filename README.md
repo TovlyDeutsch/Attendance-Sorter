@@ -1,4 +1,7 @@
 # Attendance Sorter
+
+### Promotional video and Tutorial Video (Very helpful):
+<a href="https://www.youtube.com/watch?v=_6WqHDGb-pU" target="_blank"><img src="http://img.youtube.com/vi/_6WqHDGb-pU/hqdefault.jpg" alt="" width="240" height="180" border="10" /></a>  <a href="https://www.youtube.com/watch?v=uB6Yd5HqMv0" target="_blank"><img src="http://img.youtube.com/vi/uB6Yd5HqMv0/hqdefault.jpg" alt="" width="240" height="180" border="100px" /></a>
 ### Background and Description
 Attendance Sorter is a Google Sheets add-on to help people manage attendance with Google Sheets and Forms. It grew out of the frustration of using Google Apps to collect attendace. Every time a user signed in to a form, a new timestamped row was added to the sheet resulting in a massive messy table. Accordingly, Attendance Sorter's original and primary function is to take raw form data and sort into a nice formatted sheet (example below)
 
@@ -18,10 +21,5 @@ Attendance Sorter is a Google Sheets add-on to help people manage attendance wit
 
 2. The teacher opens a checklist of student names and checks off whoever is absent
 
-### Setup workflow (Image is a link to video explanation)
-
-<a href="https://www.youtube.com/watch?v=uB6Yd5HqMv0" target="_blank"><img src="http://img.youtube.com/vi/uB6Yd5HqMv0/hqdefault.jpg" 
-alt="" width="240" height="180" border="10" /></a>
-
 #### Disclaimer
-Attendance Sorter is useful for and used by a wide variety of organizations. The terms "student" and "teacher" are only used here for simplicity.
+Attendance Sorter is useful for and used by a wide variety of organizations. The terms "student" and "teacher" are only used here for simplicity.test
