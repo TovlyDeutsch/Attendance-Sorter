@@ -25,6 +25,7 @@ Attendance Sorter is a Google Sheets add-on to help people manage attendance wit
 ### Helpful links
 
 <a href="https://chrome.google.com/webstore/detail/attendance-sorter/poaklhcmcafeiocddnchehclcofieipn" target="_blank">Store Page</a><br>
+<a href="https://trello.com/b/T8fVNcgW/attendance-sorter" target="_blank">Trello Board</a><br>
 <a href="https://chrome.google.com/webstore/detail/attendance-sorter/poaklhcmcafeiocddnchehclcofieipn" target="_blank">Google Apps Script Spreadsheet Documentation</a>
 
 #### Disclaimer
