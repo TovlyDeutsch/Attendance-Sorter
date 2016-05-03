@@ -29,4 +29,4 @@ Attendance Sorter is a Google Sheets add-on to help people manage attendance wit
 <a href="https://chrome.google.com/webstore/detail/attendance-sorter/poaklhcmcafeiocddnchehclcofieipn" target="_blank">Google Apps Script Spreadsheet Documentation</a>
 
 #### Disclaimer
-Attendance Sorter is useful for and used by a wide variety of organizations. The terms "student" and "teacher" are only used here for simplicity.test
+Attendance Sorter is useful for and used by a wide variety of organizations. The terms "student" and "teacher" are only used here for simplicity.
