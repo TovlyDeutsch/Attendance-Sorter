@@ -186,31 +186,29 @@ google.script.run.withSuccessHandler(onGetSheetsSuccess).withFailureHandler(onGe
 google.script.run.withSuccessHandler(onInsertAddNamesSheetSuccess).withFailureHandler(onInsertAddNamesSheetFailure).insertAddNamesSheet();
 
 function onAddNamesSuccess(returnMessage) {
-console.log(returnMessage);
-if (returnMessage == 'no names') {
-$('.loader').remove();
-$('.errorText').remove();
-$('#addNamesButton').prop('disabled', false);
-$('#lastButtonBlock').before('<p class="errorText" id="firstError">No names added.</p>');
-}
-else{
-google.script.host.close();
-}
+
+  if (returnMessage == 'no names') {
+  $('.loader').remove();
+  $('.errorText').remove();
+  $('#addNamesButton').prop('disabled', false);
+  $('#lastButtonBlock').before('<p class="errorText" id="firstError">No names added.</p>');
+  }
+  else{
+    google.script.host.close();
+  }
 
 }
 
 function onAddNamesFailure () {
-$('.loader').remove();
-$('.errorText').remove();
-$('#addNamesButton').prop('disabled', false);
-$('#lastButtonBlock').before('<p class="errorText" id="firstError">Names could not be added. Please try again. If this issue persists, please report it via "Attendance Sorter > Help".</p>');
+  $('.loader').remove();
+  $('.errorText').remove();
+  $('#addNamesButton').prop('disabled', false);
+  $('#lastButtonBlock').before('<p class="errorText" id="firstError">Names could not be added. Please try again. If this issue persists, please report it via "Attendance Sorter > Help".</p>');
 
 }
-
-
  
 function addNames() {
-$('#successMessage').remove();
+  $('#successMessage').remove();
   $('#lastButtonBlock').after('<span class="loader"><span class="loader-inner"></span></span>');
   $('#addNamesButton').prop('disabled', true);
   console.log($( "#sheetsDropDown option:selected" ).data('sheetid'));

@@ -32,31 +32,29 @@ border: 1px solid #dd4b39;
 
 }
 .errorText {
-color: #dd4b39;
-margin-bottom: 0;
+  color: #dd4b39;
+  margin-bottom: 0;
 }
 
 .pageOneTextInputs {
-display: block;
+  display: block;
 }
 .arrow {
-font-size: 45px;
+  font-size: 45px;
   vertical-align: sub;
 }
 #lastButton{
-position:absolute; 
-bottom:0;
+  position:absolute; 
+  bottom:0;
 }
-
 
 </style>
 
-  
-
-  <div class="block">
+<div class="block">
   <h1 class="sectionHeader">Sheet Options</h1>
   <p> This setting will determine how many recent meetings (the columns headed by dates) should be shown. All older meetings will be hidden.</p>
-    <p><b>Number of meetings to show</b></p>
+  <p><b>Number of meetings to show</b></p>
+  <div class='block' style="margin-bottom:13px;">
     <select id='numOfMeetingsToShow' style="display:inline">
       <option value="all">All</option>
       <option value="5">5</option>
@@ -65,26 +63,44 @@ bottom:0;
       <option value="custom">Custom</option>
       <option value="none">None</option>
     </select>
-    <input id="customInput" style="display:none; margin-left: 15px;" type="number"> 
-
+    <input id="customInput" style="display:none; margin-left: 15px;" type="number">
+  </div>
+  <!--
+  <input type="checkbox" style="display: inline-block;">
+  <p style="display: inline;"><b>Show sign-in times</b></p>
+  -->
+  
+  
   <br class="lineBreaks">
   <br>
-
- <div id= "lastButton" class="block">
-    <button class="action" onClick="saveSettings()">Save</button>
-    <button onClick="google.script.host.close()">Close</button>
+  <span class="loader"><span class="loader-inner"><span class="innerText"></span></span></span>
+  <div id= "lastButton" class="block">
+    <button class="action" onClick="saveSettings()" disabled>Save</button>
+    <button onClick="google.script.host.close()" disabled>Close</button>
   </div>
- 
   
+</div> <!-- right? for first one or should it go right after br? -->
+<script>
+function getSettings() {
+  google.script.run.withSuccessHandler(onGetSettingsSuccess).withFailureHandler(onGetSettingsFailure).gsGetStoredSheet();
+}
+
+getSettings();
+
+function onGetSettingsSuccess(sheet) {
+  var numberToShow = sheet.numberToShow;
+  $('#numOfMeetingsToShow').val(numberToShow.toString())
   
+  $('.loader').remove();
+  $('button').prop('disabled', false)
   
+}
 
+function onGetSettingsFailure(error) {
+$('.loader').remove();
+$('button').prop('disabled', false)
 
-
-
-
-
-<script>  
+}
 
 $( "#numOfMeetingsToShow, #customInput" ).change(function() {
   if (document.getElementById("numOfMeetingsToShow").value == 'custom') {
@@ -95,40 +111,39 @@ $( "#numOfMeetingsToShow, #customInput" ).change(function() {
   }
 });
 
-
- 
-  function onSettingsSuccess() {
+function onSettingsSuccess() {
   $('.loader').remove();
   google.script.host.close();
-  }
+}
   
-   function onSettingsFailure(error) {
- $('.loader').remove();
-if($('.failText').length == 0) {
-   $('#lastButton').append('<p class="errorText">Settings could not be saved. Please try again.</p>');
- }
- }
+function onSettingsFailure(error) {
+  $('.loader').remove();
+  if($('.failText').length == 0) {
+    $('#lastButton').append('<p class="errorText">Settings could not be saved. Please try again.</p>');
+  }
+}
   
 function saveSettings () {
-$('#lastButton').prepend('<span class="loader"><span class="loader-inner"><span class="innerText"></span></span></span>');
-if (document.getElementById("numOfMeetingsToShow").value == 'custom') {
-google.script.run.withSuccessHandler(onSettingsSuccess).withFailureHandler(onSettingsFailure).gsUpdateSettings(document.getElementById("customInput").value);
+  $('#lastButton').prepend('<span class="loader"><span class="loader-inner"><span class="innerText"></span></span></span>');
+  if (document.getElementById("numOfMeetingsToShow").value == 'custom') {
+    google.script.run.withSuccessHandler(onSettingsSuccess).withFailureHandler(onSettingsFailure).gsUpdateSettings(document.getElementById("customInput").value);
+  }
+  else {
+    google.script.run.withSuccessHandler(onSettingsSuccess).withFailureHandler(onSettingsFailure).gsUpdateSettings(document.getElementById("numOfMeetingsToShow").value);
+  }
 }
-else {
-google.script.run.withSuccessHandler(onSettingsSuccess).withFailureHandler(onSettingsFailure).gsUpdateSettings(document.getElementById("numOfMeetingsToShow").value);
-}
-}
+
 </script>
 <style>
 .loader {
   display: block;
   width: 60px;
   height: 60px;
-  position: relative;
+  position: absolute;
   border: 4px solid #4889f1;
   top: 50%;
   animation: loader 2s infinite ease;
-    margin: 30px auto;
+  margin: 30px auto;
   left: 90px;
 }
 
