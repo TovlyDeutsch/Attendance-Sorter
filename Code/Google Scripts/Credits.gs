@@ -1,6 +1,6 @@
-//Bulk Sheet Manger by Tuvia Deutsch
+//Attendance Sorter by Tovly Deutsch
 //
-//Copyright (c) 2015 - Tuvia Deutsch - https://chrome.google.com/webstore/detail/bulk-sheet-manager/ncifcaeanmakefjdnkaiddkiecokhoka
+//Copyright (c) 2016 - Tovly Deutsch - https://chrome.google.com/webstore/detail/attendance-sorter/poaklhcmcafeiocddnchehclcofieipn?hl=en
 //
 //Permission is hereby granted, free of charge, to any person 
 //obtaining a copy of this software and associated documentation 
