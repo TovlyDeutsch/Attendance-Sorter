@@ -1,5 +1,11 @@
 // This is the code that is run whenever the linked form(s) are submitted
 function AttendanceSorter (e) {
+  
+  //Take from Google at http://googleappsdeveloper.blogspot.com/2011/10/concurrency-and-google-apps-script.html
+  // Get a public lock on this script, because we're about to modify a shared resource.
+  var lock = LockService.getPublicLock();
+  // Wait for up to 2 minutes for other processes to finish.
+  lock.waitLock(120000);
 
   var spreadsheet = e.range.getSheet().getParent();
   var documentProperties = PropertiesService.getDocumentProperties();
@@ -145,6 +151,10 @@ function AttendanceSorter (e) {
   
     } // end check if sheet is null
   } // end sheet cycle for loop
+  
+  // Release the lock so that other processes can continue.
+  lock.releaseLock();
+  
 } //end function
   
 
